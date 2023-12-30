@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   backend:
+    container_name: air_quality_backend
     build:
       context: ./backend
       args:
@@ -20,6 +21,7 @@ services:
       - postgis
 
   cronjob:
+    container_name: air_quality_cronjob
     build:
       context: ./backend
       args:

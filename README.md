@@ -69,7 +69,7 @@ For testing, follow these steps:
 1. Access the application container:
 
     ```bash
-    docker exec -it fs-nodejs-backend-1 /bin/bash
+    docker exec -it air_quality_backend /bin/bash
     ```
 
 2. Execute tests using these commands:
