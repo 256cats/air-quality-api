@@ -1,85 +1,90 @@
 # Air Quality Backend API
 
-Welcome to the repository for the Air Quality Backend API. This project is designed to monitor air quality metrics using a variety of technologies. Below, you'll find an overview of the technologies used and instructions on how to run the API, update the database schema, and execute tests. 
+Welcome to the Air Quality Backend API repository! Our project aims to deliver reliable air quality monitoring through a robust, technology-driven solution. In this document, you'll find detailed information about our technology stack, instructions for local deployment, API usage, database management, and testing procedures. 
 
-Docker-compose stack for easier development and testing is provided.
+To streamline development and testing, we provide a Docker-compose stack.
 
-## Technologies Used
+## Technologies Overview
 
-- **Node.js**
-- **TypeScript**
-- **Express** ([https://expressjs.com/](https://expressjs.com/)): A web application framework
-- **Tsoa** ([https://github.com/lukeautry/tsoa](https://github.com/lukeautry/tsoa)): Empowering API-first controllers, request payload validation, and automatic OpenAPI schema generation
-- **Prisma** ([https://www.prisma.io/](https://www.prisma.io/)): An Object-Relational Mapping (ORM) tool
-- **Apicache** ([https://github.com/kwhitley/apicache](https://github.com/kwhitley/apicache)): Caching middleware for enhanced performance
-- **Pino** ([https://github.com/pinojs/pino](https://github.com/pinojs/pino)): A logger for better logging capabilities
-- **Prometheus, Grafana**: Monitoring tools for insightful performance analysis
-- **Swagger-UI-express** ([https://www.npmjs.com/package/swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)): Auto-generated API documentation and an API playground
-- **Redocly** ([https://redocly.com/](https://redocly.com/)): Generating API documentation
-- **Typedi** ([https://github.com/typestack/typedi](https://github.com/typestack/typedi)): A dependency injection library
-- **Mollitia** ([https://genesys.github.io/mollitia/](https://genesys.github.io/mollitia/)): A circuit breaker for better fault tolerance
-- **Jest**/**TS-Jest**: Testing framework
-- **Eslint**, **Prettier**: Code linting and formatting tools
-- **PostgreSQL**: The chosen relational database
+This project utilizes a variety of modern technologies:
 
-## How to run the API locally
+- **Node.js**: JavaScript runtime environment.
+- **TypeScript**: A superset of JavaScript, adding static types.
+- **Express** ([ExpressJS](https://expressjs.com/)): A minimal and flexible web application framework.
+- **Tsoa** ([Tsoa](https://github.com/lukeautry/tsoa)): Simplifies building API-first controllers with automatic OpenAPI schema generation.
+- **Prisma** ([Prisma](https://www.prisma.io/)): ORM for robust database management.
+- **Apicache** ([Apicache](https://github.com/kwhitley/apicache)): Middleware for efficient caching and performance enhancement.
+- **Pino** ([Pino](https://github.com/pinojs/pino)): A fast logging tool to improve application diagnostics.
+- **Prometheus, Grafana**: Tools for in-depth monitoring and performance analysis.
+- **Swagger-UI-express** ([Swagger UI Express](https://www.npmjs.com/package/swagger-ui-express)): For interactive API documentation and exploration.
+- **Redocly** ([Redocly](https://redocly.com/)): Produces comprehensive API documentation.
+- **Typedi** ([Typedi](https://github.com/typestack/typedi)): Dependency injection library for cleaner code management.
+- **Mollitia** ([Mollitia](https://genesys.github.io/mollitia/)): Implements a circuit breaker pattern for enhanced fault tolerance.
+- **Jest/TS-Jest**: Robust frameworks for both unit and integration testing.
+- **Eslint, Prettier**: Tools for ensuring code quality and consistency.
+- **PostgreSQL**: A powerful and open-source relational database.
 
-1. Copy `backend/.env.example` to `backend/.env` and replace `IQ_AIR_API_KEY=xyz` with your valid IQ Air API key.
-2. Execute the following command:
+## Running the API Locally
+
+Follow these steps to run the API in your local environment:
+
+1. Create your environment file by copying `backend/.env.example` to `backend/.env`. Replace `IQ_AIR_API_KEY=xyz` with your valid IQ Air API key.
+2. Start the application using Docker:
 
     ```bash
     docker-compose up
     ```
 
-   This command initializes the REST API server, cron job, PostgreSQL, Prometheus, and Grafana. The API can be accessed at `localhost:5000` by default.
+    This initializes the REST API server, cron job, PostgreSQL, Prometheus, and Grafana, and makes the API accessible at `localhost:5000`.
 
-### Available Routes
+### Exploring the API Routes
 
-- **Worst Air Quality Date Time**: [Link](http://localhost:5000/v1/air-quality/worst-air-quality-date-time/{cityName}) - Returns the worst air quality date time recorded by the cron job for a given city name. Example: [Paris](http://localhost:5000/v1/air-quality/worst-air-quality-date-time/paris)
+Discover the API's capabilities through these routes:
 
-- **Nearest City**: [Link](http://localhost:5000/v1/air-quality/nearest-city?lat={lat}&lon={lon}) - Returns real-time air quality for the nearest city (from IQ Air API) based on given coordinates. Example: [Latitude 50, Longitude 50](http://localhost:5000/v1/air-quality/nearest-city?lat=50&lon=50)
+- **Worst Air Quality Date Time**: Retrieve the date and time of the worst air quality for a specified city name. Example: [Paris](http://localhost:5000/v1/air-quality/worst-air-quality-date-time/paris)
+- **Nearest City Air Quality**: Get real-time air quality data for the nearest city based on coordinates. Example: [Latitude 50, Longitude 50](http://localhost:5000/v1/air-quality/nearest-city?lat=50&lon=50)
+- **Swagger UI**: Interact with our API and view documentation at [Swagger UI](http://localhost:5000/docs/).
+- **API Metrics**: Monitor API performance with [Prometheus metrics](http://localhost:9999/metrics).
+- **Grafana Dashboard**: Visualize API analytics on our [Grafana Dashboard](http://localhost:3000/d/1DYaynomMk/backend-service-dashboard?orgId=1&refresh=10s).
 
-- **Swagger UI**: [Link](http://localhost:5000/docs/) - API playground and auto-generated API documentation
+The OpenAPI schema can be found at `backend/src/generated/openapi.json`, with HTML documentation at `backend/src/generated/openapi.html`.
 
-- **API Metrics**: [Link](http://localhost:9999/metrics) - Metrics consumed by Prometheus
+## Updating the Database Schema
 
-- **Grafana Dashboard**: [Link](http://localhost:3000/d/1DYaynomMk/backend-service-dashboard?orgId=1&refresh=10s) with 
+To modify the database schema:
 
-The OpenAPI schema is located at `backend/src/generated/openapi.json`, and API docs are at `backend/src/generated/openapi.html`.
-
-## How to Update Database Schema
-
-1. Modify `backend/prisma/schema.prisma`.
-2. Run the following command:
+1. Edit `backend/prisma/schema.prisma`.
+2. Apply your changes with Prisma:
 
     ```bash
     npx prisma migrate dev
     ```
 
-   This command applies migrations and regenerates the Prisma client.
+    This updates the database schema and regenerates the Prisma client.
 
-## How to Run Tests
+## Executing Tests
 
-1. Connect to the app container:
+For testing, follow these steps:
+
+1. Access the application container:
 
     ```bash
     docker exec -it fs-nodejs-backend-1 /bin/bash
     ```
 
-2. Run the following commands:
-
+2. Execute tests using these commands:
     - Unit and integration tests:
 
         ```bash
         npm run test
         ```
 
-    - Integration tests (WARNING: erases all data from the database):
+    - Integration tests with database reset (WARNING: All data will be erased):
 
         ```bash
         npm run test-e2e
         ```
 
-## Miscellaneous Notes
+## Additional Information
 
-- For the cron job, [node-cron](https://www.npmjs.com/package/cron) is used for easier integration with Docker. The actual job is in `backend/src/bin/air-quality-cron-job.ts`
+- **Cron Job**: Implemented using [node-cron](https://www.npmjs.com/package/cron) for seamless Docker integration. The job's script is located at `backend/src/bin/air-quality-cron-job.ts`.
