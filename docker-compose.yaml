@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        NODE_ENV: development
+    init: true
+    command: bash -c "wait-for-it -s -t 60 postgis:5432 -- npm run dev"
+    env_file:
+      - ./backend/.env
+    ports:
+      - "127.0.0.1:5000:5000"
+      - "127.0.0.1:9999:9999"
+    volumes:
+      - ./backend/src:/home/node/app/src
+      - ./backend/tests:/home/node/app/tests
+    depends_on:
+      - postgis
+
+  cronjob:
+    build:
+      context: ./backend
+      args:
+        NODE_ENV: development
+    init: true
+    command: bash -c "wait-for-it -s -t 60 postgis:5432 -- npm run cronjob"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/src:/home/node/app/src
+      - ./backend/tests:/home/node/app/tests
+    depends_on:
+      - postgis
+
+  postgis:
+    image: postgis/postgis:16-3.4
+    init: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgis:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    command:
+      - "postgres"
+  
+  prometheus:
+    image: prom/prometheus:v2.48.1
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./data/prometheus:/prometheus
+    ports:
+      - 9090:9090
+    expose:
+      - 9090
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+

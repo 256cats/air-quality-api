@@ -1,0 +1,16 @@
+*
+!jest.config.js
+!tsoa.json
+!nodemon.json
+!tsconfig.json
+!.eslintignore
+!.eslintrc.js
+!.prettierignore
+!.prettierrc.js
+!.prettierrc.cjs
+!.npmrc
+!package*.json
+!src
+!tests
+!prisma
+!.env.example

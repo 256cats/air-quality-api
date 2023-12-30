@@ -1,0 +1,233 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Pick_CityAirQuality.ts-or-aqius-or-aqicn-or-maincn-or-mainus_": {
+				"properties": {
+					"ts": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"aqius": {
+						"type": "number",
+						"format": "double"
+					},
+					"aqicn": {
+						"type": "number",
+						"format": "double"
+					},
+					"maincn": {
+						"type": "string"
+					},
+					"mainus": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ts",
+					"aqius",
+					"aqicn",
+					"maincn",
+					"mainus"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"AirQuality": {
+				"$ref": "#/components/schemas/Pick_CityAirQuality.ts-or-aqius-or-aqicn-or-maincn-or-mainus_"
+			},
+			"AirQualityResponse": {
+				"properties": {
+					"Result": {
+						"properties": {
+							"Pollution": {
+								"$ref": "#/components/schemas/AirQuality"
+							}
+						},
+						"required": [
+							"Pollution"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"Result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateErrorJSON": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"enum": [
+							"Validation failed"
+						],
+						"nullable": false
+					},
+					"details": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object"
+					}
+				},
+				"required": [
+					"message",
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WorstAirQualityDateTime": {
+				"properties": {
+					"Result": {
+						"properties": {
+							"cityName": {
+								"type": "string"
+							},
+							"WorstAirQuality": {
+								"properties": {
+									"dateTime": {
+										"type": "string",
+										"format": "date-time"
+									}
+								},
+								"required": [
+									"dateTime"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"cityName",
+							"WorstAirQuality"
+						],
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"Result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "backend",
+		"version": "1.0.0",
+		"license": {
+			"name": "UNLICENSED"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/air-quality/nearest-city": {
+			"get": {
+				"operationId": "GetNearestCityAirQuality",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AirQualityResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidateErrorJSON"
+								}
+							}
+						}
+					}
+				},
+				"description": "Returns realtime air quality of the nearest city.\nProvide latitude and longitude.",
+				"security": [],
+				"parameters": [
+					{
+						"description": "latitude",
+						"in": "query",
+						"name": "lat",
+						"required": true,
+						"schema": {
+							"format": "float",
+							"type": "number",
+							"minimum": -90,
+							"maximum": 90
+						}
+					},
+					{
+						"description": "longitude",
+						"in": "query",
+						"name": "lon",
+						"required": true,
+						"schema": {
+							"format": "float",
+							"type": "number",
+							"minimum": -180,
+							"maximum": 180
+						}
+					}
+				]
+			}
+		},
+		"/air-quality/worst-air-quality-date-time/{cityName}": {
+			"get": {
+				"operationId": "GetWorstAirQualityDateTimeByCityName",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WorstAirQualityDateTime"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidateErrorJSON"
+								}
+							}
+						}
+					}
+				},
+				"description": "Returns the datetime of the worst stored air quality for the given city name.\nProvide city name.",
+				"security": [],
+				"parameters": [
+					{
+						"description": "city name",
+						"in": "path",
+						"name": "cityName",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/v1"
+		}
+	]
+}
